@@ -1,0 +1,5 @@
+channels:
+- currentCSV: ocean-operator.v0.0.1
+  name: alpha
+defaultChannel: alpha
+packageName: ocean-operator

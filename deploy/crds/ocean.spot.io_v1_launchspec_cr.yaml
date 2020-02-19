@@ -1,0 +1,27 @@
+apiVersion: ocean.spot.io/v1
+kind: LaunchSpec
+metadata:
+  name: example
+spec:
+  # ID of the Ocean cluster this launch spec is associated with.
+  oceanId: oc-123456789
+
+  # List of labels to which allow you to adjust the default behavior of scaling
+  # in your Ocean.
+  labels:
+      # Key is the label key.
+    - key: foo
+
+      # Value is the label value.
+      value: bar
+
+  # List of taints to add to the nodes.
+  taints:
+      # Key is the taint key.
+    - key: dedicated
+
+      # Value is the taint value.
+      value: special-user
+
+      # Effect is the taint effect.
+      effect: NoSchedule

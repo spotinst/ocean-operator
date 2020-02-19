@@ -1,0 +1,63 @@
+apiVersion: ocean.spot.io/v1
+kind: Cluster
+metadata:
+  name: example
+spec:
+  # The region your cluster will be created in.
+  region: us-west-2
+
+  strategy:
+    # The percentage of Spot instances that would spin up from the
+    # `capacity.target` number.
+    spotPercentage: 100
+
+    # In a case of any available reserved instances, Ocean will utilize them
+    # first before purchasing Spot instances.
+    utilizeReservedInstances: true
+
+    # In a case of no Spot instances available, Ocean will launch on-demand
+    # instances instead.
+    fallbackToOd: true
+
+  capacity:
+    # The number of instances that should be running in the cluster.
+    target: 3
+
+    # The minimum size of the cluster.
+    minimum: 0
+
+    # The maximum size of the cluster.
+    maximum: 10
+
+  compute:
+    launchSpecification:
+
+      # List of security group identifiers to associate with.
+      securityGroupIds:
+        - sg-123456789
+
+      # IAM Instance Profile to attach.
+      iamInstanceProfile:
+        # The Amazon Resource Name (ARN) of the instance profile.
+        arn: arn:aws:iam::123456789:instance-profile/foo
+
+      # Name of the key pair to associate with.
+      keyPair: supersecret
+
+      # Public IP address allocation.
+      associatePublicIpAddress: true
+
+      # Enable detailed monitoring for cluster. Flag will enable cloud detailed
+      # monitoring. There are additional hourly costs for this service based on
+      # the region used.
+      monitoring: false
+
+      # ID of the image used to launch the instances.
+      imageId: ami-123456789
+
+      # Base64-encoded user data to provide when launching the instance.
+      userData: "foo"
+
+    # List of subnet identifiers to associate with.
+    subnetIds:
+      - subnet-123456789

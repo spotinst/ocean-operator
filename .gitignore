@@ -1,0 +1,17 @@
+# artifacts
+build/_output
+bundle
+
+# macOS
+.DS_Store
+
+# vim
+*~
+.sw[a-p]
+.*.sw[a-p]
+
+# jetbrains
+.idea
+
+# vscode
+.vscode

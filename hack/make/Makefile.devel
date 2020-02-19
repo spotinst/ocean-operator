@@ -1,0 +1,188 @@
+##@ Development
+
+define TEST_HELP_INFO
+# Run tests.
+#
+# Args:
+#   PKGS: List of packages to test. Defaults to all.
+#   ARGS: Extra arguments to pass to `go test` when testing.
+#   TIMEOUT: Maximum duration (in seconds) before timing out the test execution.
+#
+# Example:
+#   make test
+#   make test TIMEOUT=30
+#   make test PKGS="./internal/version"
+#   make test ARGS="-v"
+#   make test-bench
+#   make test-short
+#   make test-verbose
+#   make test-race
+endef
+TEST_TARGETS := test-bench test-short test-verbose test-race
+.PHONY: $(TEST_TARGETS) test
+ifeq ($(HELP),y)
+$(TEST_TARGETS) test:
+	$(Q) echo "$$TEST_HELP_INFO"
+else
+$(TEST_TARGETS): TYPE=$(MAKECMDGOALS:test-%=%)
+$(TEST_TARGETS): test
+test: fmt lint ; $(info ===> running $(TYPE:%=% )tests...) @ ## Run tests
+	$(Q) $(GO) test -timeout $(TIMEOUT)s $(strip $(ARGS)) $(PKGS)
+test-bench:   ARGS=-run=__absolutelynothing__ -bench=.       ## Run benchmarks
+test-short:   ARGS=-short                                    ## Run only short tests
+test-verbose: ARGS=-v                                        ## Run tests in verbose mode
+test-race:    ARGS=-race                                     ## Run tests with race detector
+endif
+
+define COVERAGE_HELP_INFO
+# Run coverage tests.
+#
+# Args:
+#   PKGS: List of packages to test. Defaults to all.
+#   ARGS: Extra arguments to pass to `go test` when testing.
+#   TIMEOUT: Maximum duration (in seconds) before timing out the test execution.
+#   COVERAGE_MODE: Mode for coverage analysis: set, count, atomic.
+#   COVERAGE_PROFILE: File path for the coverage profile output.
+#   COVERAGE_HTML: File path for the generated HTML representation of coverage profile.
+#
+# Example:
+#   make test-coverage TIMEOUT=30
+#   make test-coverage PKGS="./internal/version"
+#   make test-coverage ARGS="-v"
+#   make test-coverage COVERAGE_PROFILE="/path/to/profile.out"
+endef
+.PHONY: test-coverage
+ifeq ($(HELP),y)
+test-coverage:
+	$(Q) echo "$$COVERAGE_HELP_INFO"
+else
+test-coverage: fmt lint ## Run coverage tests
+	$(Q) mkdir -p $(COVERAGE_DIR)
+	$(Q) $(GO) test -timeout $(TIMEOUT)s $(strip $(ARGS)) $(PKGS) \
+		-covermode=$(COVERAGE_MODE) \
+		-coverprofile="$(COVERAGE_PROFILE)" $(PKGS)
+	$(Q) $(GO) tool cover -html=$(COVERAGE_PROFILE) -o $(COVERAGE_HTML)
+endif
+
+define LINT_HELP_INFO
+# Run golint.
+#
+# Args:
+#   PKGS: List of packages to check. Defaults to all.
+#
+# Example:
+#   make lint
+#   make lint PKGS="./internal/version"
+endef
+.PHONY: lint
+ifeq ($(HELP),y)
+lint:
+	$(Q) echo "$$LINT_HELP_INFO"
+else
+lint: tools ## Run golint
+	$(Q) $(GOLINT) -set_exit_status $(PKGS)
+endif
+
+define FMT_HELP_INFO
+# Run gofmt.
+#
+# Args:
+#   PKGS: List of packages to check. Defaults to all.
+#
+# Example:
+#   make fmt
+#   make fmt PKGS="./internal/version"
+endef
+.PHONY: fmt
+ifeq ($(HELP),y)
+fmt:
+	$(Q) echo "$$FMT_HELP_INFO"
+else
+fmt: tools ## Run gofmt
+	$(Q) $(GOFMT) -s -w $(PKGS)
+endif
+
+define IMPORTS_HELP_INFO
+# Run goimports.
+#
+# Args:
+#   PKGS: List of packages to check. Defaults to all.
+#
+# Example:
+#   make imports
+#   make imports PKGS="./internal/version"
+endef
+.PHONY: imports
+ifeq ($(HELP),y)
+imports:
+	$(Q) echo "$$IMPORTS_HELP_INFO"
+else
+imports: tools ## Run goimports
+	$(Q) $(GOIMPORTS) -w $(PKGS)
+endif
+
+define UPDATE_HELP_INFO
+# Update dependencies.
+#
+# Example:
+#   make update
+endef
+.PHONY: update
+ifeq ($(HELP),y)
+update:
+	$(Q) echo "$$UPDATE_HELP_INFO"
+else
+update: ## Update dependencies
+	$(Q) $(GO) get -u ./...
+	$(Q) $(GO) mod tidy
+	$(Q) $(GO) mod vendor
+endif
+
+define TIDY_HELP_INFO
+# Add missing and remove unused modules.
+#
+# Example:
+#   make tidy
+endef
+.PHONY: tidy
+ifeq ($(HELP),y)
+tidy:
+	$(Q) echo "$$TIDY_HELP_INFO"
+else
+tidy: ## Add missing and remove unused modules
+	$(Q) $(GO) mod tidy
+	$(Q) $(GO) mod vendor
+endif
+
+define TOOLS_HELP_INFO
+# Install tool dependencies.
+#
+# Example:
+#   make tools
+endef
+.PHONY: tools
+ifeq ($(HELP),y)
+tools:
+	$(Q) echo "$$TOOLS_HELP_INFO"
+else
+tools: ## Install tool dependencies
+	$(Q) cd $(TOOLS_DIR)
+	$(Q) $(GO_TOOL) install golang.org/x/tools/cmd/goimports
+	$(Q) $(GO_TOOL) install golang.org/x/lint/golint
+	$(Q) $(GO_TOOL) install github.com/go-bindata/go-bindata/...
+endif
+
+define CLEAN_HELP_INFO
+# Remove all build artifacts.
+#
+# Example:
+#   make clean
+endef
+.PHONY: clean
+ifeq ($(HELP),y)
+clean:
+	$(Q) echo "$$CLEAN_HELP_INFO"
+else
+clean: ## Remove all build artifacts
+	$(Q) rm -rf $(DIST_DIR)
+endif
