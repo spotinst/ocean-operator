@@ -1,0 +1,13 @@
+apiVersion: ocean.spot.io/v1alpha1
+kind: OceanComponent
+metadata:
+  name: ocean-controller
+spec:
+  type: Helm
+  name: ocean-controller
+  url: https://charts.spot.io
+  state: Present
+  version: 1.0.92
+  values: |
+    secret:
+      enabled: true

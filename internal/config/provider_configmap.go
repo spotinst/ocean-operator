@@ -1,10 +1,12 @@
+// Copyright 2021 NetApp, Inc. All Rights Reserved.
+
 package config
 
 import (
 	"context"
 	"fmt"
 
-	"gopkg.in/yaml.v3"
+	"github.com/mitchellh/mapstructure"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -49,19 +51,15 @@ func (x *ConfigMapProvider) String() string {
 
 func getConfigMap(ctx context.Context, client client.Client,
 	name, namespace string) (*corev1.ConfigMap, error) {
-
 	obj := new(corev1.ConfigMap)
 	key := types.NamespacedName{
 		Name:      name,
 		Namespace: namespace,
 	}
-
 	return obj, client.Get(ctx, key, obj)
 }
 
 func decodeConfigMap(configMap *corev1.ConfigMap) (*Value, error) {
-	src := []byte(configMap.Data["config.yaml"])
-	dst := new(Value)
-
-	return dst, yaml.Unmarshal(src, dst)
+	value := new(Value)
+	return value, mapstructure.Decode(configMap.Data, value)
 }

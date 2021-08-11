@@ -1,3 +1,5 @@
+// Copyright 2021 NetApp, Inc. All Rights Reserved.
+
 package credentials
 
 import (
@@ -50,9 +52,9 @@ func (x *Credentials) Get(ctx context.Context) (*Value, error) {
 
 // Refresh refreshes the credentials and forces it to be retrieved on the next
 // call to Get().
-func (x *Credentials) Refresh() {
+func (x *Credentials) Refresh() *Credentials {
 	x.mu.Lock()
 	defer x.mu.Unlock()
-
 	x.forceRefresh = true
+	return x
 }

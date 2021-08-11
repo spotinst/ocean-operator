@@ -1,11 +1,10 @@
-# <a href="https://github.com/spotinst/ocean-operator"><img src="./assets/ocean.png" width=30/></a> Ocean Operator for Kubernetes<a href="https://access.redhat.com/containers/#/docker.io/spotinst/ocean-operator"><img src="./assets/rhcert.png" align="right" width=150/></a>
+# Ocean Operator for Kubernetes
 
-**Ocean Operator for Kubernetes** is an [Operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) that makes use of [custom resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) and can be used to create and manage Ocean resources in [Spot](https://spot.io/). There is no additional charge to use this Operator. You do incur charges for any Ocean resources that you use through this Operator.
+**Ocean Operator for Kubernetes** is an [Operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/) that makes use of [custom resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) and can be used to create and manage Ocean components.
 
 ## Table of Contents
 
 - [Installation](#installation)
-- [Usage](#usage)
 - [Documentation](#documentation)
 - [Getting Help](#getting-help)
 - [Community](#community)
@@ -14,17 +13,71 @@
 
 ## Installation
 
-```bash
-$ TBD
+### Install with Spot CLI
+
+#### Prerequisites
+
+- [Install the Spot CLI](https://github.com/spotinst/spotctl#installation).
+
+#### Steps
+
+1. Install `ocean-operator`:
+
+```sh
+spotctl ocean install \
+  --set spotinst.token=REDACTED \
+  --set spotinst.account=REDACTED \
+  --set spotinst.clusterIdentifier=REDACTED \
+  --namespace spot-system
+  # [...]
 ```
 
-## Usage
+#### Verify
 
-First, you must install the Operator. After installation is complete, create a `Cluster` YAML specification by following one of the samples, like [deploy/crds/ocean.spot.io_v1_cluster_cr.yaml](./deploy/crds/ocean.spot.io_v1_cluster_cr.yaml). Then, use `kubectl` to create and manage your resource:
+Ensure all Kubernetes Pods in `spot-system` namespace are deployed and have a `STATUS` of `Running`:
 
-```bash
-$ kubectl apply -f ocean.spot.io_v1_cluster_cr.yaml
-cluser.ocean.spot.io/example-cluster created
+```sh
+kubectl get pods -n spot-system
+```
+
+### Install with Helm
+
+#### Prerequisites
+
+- [Install a Helm client](https://helm.sh/docs/intro/install/) with a version 3 or later.
+
+#### Steps
+
+1. Add the Spot Helm repository:
+
+```sh
+helm repo add spot https://charts.spot.io
+```
+
+2. Update your local Helm chart repository cache:
+
+```sh
+helm repo update
+```
+
+3. Install `ocean-operator`:
+
+```sh
+helm install my-release spot/ocean-operator \
+  --set spotinst.token=REDACTED \
+  --set spotinst.account=REDACTED \
+  --set spotinst.clusterIdentifier=REDACTED \
+  --namespace spot-system \
+  --create-namespace \
+  # [...]
+```
+
+#### Verify
+
+Ensure all Kubernetes Pods in `spot-system` namespace are deployed and have a `STATUS` of `Running`:
+
+```sh
+kubectl get pods -n spot-system
 ```
 
 ## Documentation
@@ -50,4 +103,4 @@ Please see the [contribution guidelines](.github/CONTRIBUTING.md).
 
 ## License
 
-Code is licensed under the [Apache License 2.0](LICENSE). See [NOTICE.md](NOTICE.md) for complete details, including software and third-party licenses and permissions.
+Code is licensed under the [Apache License 2.0](LICENSE).
