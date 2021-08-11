@@ -15,11 +15,11 @@ require (
 	go.uber.org/zap v1.18.1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	helm.sh/helm/v3 v3.6.3
-	k8s.io/api v0.21.3
+	k8s.io/api v0.22.0
 	k8s.io/apiextensions-apiserver v0.21.3
-	k8s.io/apimachinery v0.21.3
-	k8s.io/cli-runtime v0.21.3
-	k8s.io/client-go v0.21.3
+	k8s.io/apimachinery v0.22.0
+	k8s.io/cli-runtime v0.22.0
+	k8s.io/client-go v0.22.0
 	rsc.io/letsencrypt v0.0.3 // indirect
 	sigs.k8s.io/controller-runtime v0.9.5
 )
