@@ -1,11 +1,29 @@
+// Copyright 2021 NetApp, Inc. All Rights Reserved.
+
 package credentials
 
 import (
 	"context"
+	"fmt"
 	"os"
 
-	"github.com/spotinst/ocean-operator/internal/spot"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 )
+
+const (
+	// EnvCredentialsToken specifies the name of the environment variable points
+	// to the Spot Token.
+	EnvCredentialsToken = credentials.EnvCredentialsVarToken
+
+	// EnvCredentialsAccount specifies the name of the environment variable points
+	// to the Spot account ID.
+	EnvCredentialsAccount = credentials.EnvCredentialsVarAccount
+)
+
+// ErrEnvCredentialsNotFound is returned when no credentials can be found in the
+// process's environment.
+var ErrEnvCredentialsNotFound = fmt.Errorf("credentials: %s and %s not found "+
+	"in environment", EnvCredentialsToken, EnvCredentialsAccount)
 
 // EnvProvider retrieves credentials from the environment variables of the process.
 type EnvProvider struct{}
@@ -17,10 +35,16 @@ func NewEnvProvider() *Credentials {
 
 // Retrieve retrieves and returns the credentials, or error in case of failure.
 func (x *EnvProvider) Retrieve(ctx context.Context) (*Value, error) {
-	return &Value{
-		Token:   os.Getenv(spot.EnvCredentialsToken),
-		Account: os.Getenv(spot.EnvCredentialsAccount),
-	}, nil
+	value := &Value{
+		Token:   os.Getenv(EnvCredentialsToken),
+		Account: os.Getenv(EnvCredentialsAccount),
+	}
+
+	if value.IsEmpty() {
+		return value, ErrEnvCredentialsNotFound
+	}
+
+	return value, nil
 }
 
 // String returns the string representation of the Env provider.

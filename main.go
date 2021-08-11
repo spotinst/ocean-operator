@@ -1,0 +1,1 @@
+internal/cmd/ocean-operator/manager/manager.go
