@@ -1,3 +1,5 @@
+// Copyright 2021 NetApp, Inc. All Rights Reserved.
+
 package credentials
 
 import (
@@ -9,6 +11,10 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+// ErrSecretCredentialsNotFound is returned when no credentials can be found in Secret.
+var ErrSecretCredentialsNotFound = fmt.Errorf("credentials: %s and %s not found "+
+	"in Secret", EnvCredentialsToken, EnvCredentialsAccount)
 
 // SecretProvider retrieves credentials from a Secret.
 type SecretProvider struct {
@@ -39,6 +45,10 @@ func (x *SecretProvider) Retrieve(ctx context.Context) (*Value, error) {
 			"namespace %q: %w", x.Name, x.Namespace, err)
 	}
 
+	if value.IsEmpty() {
+		return value, ErrSecretCredentialsNotFound
+	}
+
 	return value, nil
 }
 
@@ -60,18 +70,20 @@ func getSecret(ctx context.Context, client client.Client,
 }
 
 func decodeSecret(secret *corev1.Secret) (*Value, error) {
-	src := make(map[string]string)
-	dst := new(Value)
+	data := make(map[string]string)
+	value := new(Value)
 
-	// Copy all non-binary secret data.
-	for k, v := range secret.StringData {
-		src[k] = v
+	if secret != nil {
+		// Copy all non-binary secret data.
+		for k, v := range secret.StringData {
+			data[k] = v
+		}
+
+		// Copy all binary secret data.
+		for k, v := range secret.Data {
+			data[k] = string(v)
+		}
 	}
 
-	// Copy all binary secret data.
-	for k, v := range secret.Data {
-		src[k] = string(v)
-	}
-
-	return dst, mapstructure.Decode(src, dst)
+	return value, mapstructure.Decode(data, value)
 }

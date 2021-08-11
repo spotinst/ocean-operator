@@ -1,3 +1,5 @@
+// Copyright 2021 NetApp, Inc. All Rights Reserved.
+
 package config
 
 import (
@@ -50,9 +52,9 @@ func (x *Config) Get(ctx context.Context) (*Value, error) {
 
 // Refresh refreshes the configuration and forces it to be retrieved on the next
 // call to Get().
-func (x *Config) Refresh() {
+func (x *Config) Refresh() *Config {
 	x.mu.Lock()
 	defer x.mu.Unlock()
-
 	x.forceRefresh = true
+	return x
 }

@@ -1,0 +1,55 @@
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - uninstall
+  - update
+  - watch
+- apiGroups:
+  - ocean.spot.io
+  resources:
+  - components
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - uninstall
+  - update
+  - watch
+- apiGroups:
+  - ocean.spot.io
+  resources:
+  - components/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ocean.spot.io
+  resources:
+  - components/status
+  verbs:
+  - get
+  - patch
+  - update

@@ -1,3 +1,5 @@
+// Copyright 2021 NetApp, Inc. All Rights Reserved.
+
 package config
 
 import (
@@ -24,7 +26,6 @@ var ErrNoValidProvidersFoundInChain = errors.New("config: no valid " +
 // cache that Provider for all calls until Retrieve is called again.
 type ChainProvider struct {
 	Providers []Provider
-	active    Provider
 }
 
 // NewChainProvider returns a new Config object wrapping a chain of providers.
@@ -36,32 +37,40 @@ func NewChainProvider(providers ...Provider) *Config {
 
 // Retrieve retrieves and returns the configuration, or error in case of failure.
 func (x *ChainProvider) Retrieve(ctx context.Context) (*Value, error) {
+	value := new(Value)
 	var errs errorList
-	for _, p := range x.Providers {
-		value, err := p.Retrieve(ctx)
-		if err == nil {
-			x.active = p
-			return value, nil
+
+	if len(x.Providers) > 0 {
+		for _, p := range x.Providers {
+			v, err := p.Retrieve(ctx)
+			if err == nil && value.Merge(v).IsComplete() {
+				break
+			} else {
+				errs = append(errs, err)
+			}
 		}
-		errs = append(errs, err)
-	}
-	x.active = nil
-
-	err := ErrNoValidProvidersFoundInChain
-	if len(errs) > 0 {
-		err = errs
 	}
 
-	return nil, err
+	if value.IsEmpty() {
+		err := ErrNoValidProvidersFoundInChain
+		if len(errs) > 0 {
+			err = errs
+		}
+		return nil, err
+	}
+
+	return value, nil
 }
 
 // String returns the string representation of the Chain provider.
 func (x *ChainProvider) String() string {
 	var out string
-	for i, provider := range x.Providers {
-		out += provider.String()
-		if i < len(x.Providers)-1 {
-			out += " "
+	if len(x.Providers) > 0 {
+		for i, provider := range x.Providers {
+			out += provider.String()
+			if i < len(x.Providers)-1 {
+				out += " "
+			}
 		}
 	}
 	return out
