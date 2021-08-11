@@ -1,56 +1,47 @@
+// Copyright 2021 NetApp, Inc. All Rights Reserved.
+
 package version
 
 import (
+	_ "embed"
 	"strings"
 
 	"github.com/hashicorp/go-version"
 )
 
 var (
-	// Version represents the main version number.
-	//
-	// Populated at compile time.
-	// Read-only.
-	Version string
-
-	// Prerelease represents an optional pre-release label for the version.
-	// If this is "" (empty string) then it means that it is a final release.
-	// Otherwise, this is a pre-release such as "beta", "rc1", etc.
-	//
-	// Populated at compile time.
-	// Read-only.
-	Prerelease string
-
-	// Metadata represents an optional build metadata.
-	//
-	// Populated at compile time.
-	// Read-only.
-	Metadata string
-
-	// SemVer is an instance of SemVer version (https://semver.org) used to
-	// verify that the full version is a proper semantic version.
+	// Version is an instance of version.Version used to verify that the full
+	// version complies with the Semantic Versioning specification (https://semver.org).
 	//
 	// Populated at runtime.
 	// Read-only.
-	SemVer *version.Version
+	Version *version.Version
+
+	// _version represents the full version that must comply with the Semantic
+	// Versioning specification (https://semver.org).
+	//
+	// Populated at build-time.
+	// Read-only.
+	//go:embed VERSION
+	_version string
 )
 
 func init() {
-	v := Version
-
-	if Prerelease != "" {
-		v += "-" + strings.TrimPrefix(Prerelease, "-")
-	}
-
-	if Metadata != "" {
-		v += "+" + strings.TrimPrefix(Metadata, "+")
-	}
-
 	// Parse and verify the given version.
-	SemVer = version.Must(version.NewSemver(v))
+	Version = version.Must(version.NewSemver(strings.TrimSpace(_version)))
 }
 
-// String returns the complete version string, including prerelease and metadata.
+// Prerelease is an alias of version.Prerelease.
+func Prerelease() string {
+	return Version.Prerelease()
+}
+
+// Metadata is an alias of version.Metadata.
+func Metadata() string {
+	return Version.Metadata()
+}
+
+// String is an alias of version.String.
 func String() string {
-	return SemVer.String()
+	return Version.String()
 }

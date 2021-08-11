@@ -1,10 +1,11 @@
+// Copyright 2021 NetApp, Inc. All Rights Reserved.
+
 package config
 
 import (
 	"context"
-	"fmt"
 
-	oceanv1 "github.com/spotinst/ocean-operator/pkg/apis/ocean/v1"
+	uuid "github.com/satori/go.uuid"
 )
 
 // DefaultProvider returns the default configuration.
@@ -17,24 +18,7 @@ func NewDefaultProvider() *Config {
 
 // Retrieve retrieves and returns the configuration, or error in case of failure.
 func (x *DefaultProvider) Retrieve(context.Context) (*Value, error) {
-	return &Value{
-		Bootstrap: ValueBootstrap{
-			CRDs: []ValueCRD{
-				{
-					Name: fmt.Sprintf("%s.%s",
-						oceanv1.ClusterPluralName,
-						oceanv1.SchemeGroupVersion.Group),
-					InstallPolicy: InstallAlways,
-				},
-				{
-					Name: fmt.Sprintf("%s.%s",
-						oceanv1.LaunchSpecPluralName,
-						oceanv1.SchemeGroupVersion.Group),
-					InstallPolicy: InstallAlways,
-				},
-			},
-		},
-	}, nil
+	return &Value{ClusterIdentifier: uuid.NewV4().String()}, nil
 }
 
 // String returns the string representation of the Default provider.

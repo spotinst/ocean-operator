@@ -1,0 +1,24 @@
+# permissions for end users to edit oceancomponents.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: oceancomponent-editor-role
+rules:
+- apiGroups:
+  - ocean.spot.io
+  resources:
+  - oceancomponents
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ocean.spot.io
+  resources:
+  - oceancomponents/status
+  verbs:
+  - get
