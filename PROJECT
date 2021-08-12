@@ -1,0 +1,9 @@
+domain: spot.io
+layout:
+- go.kubebuilder.io/v3
+repo: github.com/spotinst/ocean-operator
+resources:
+- group: ocean
+  kind: OceanComponent
+  version: v1alpha1
+version: "3"
