@@ -21,5 +21,5 @@ require (
 	k8s.io/cli-runtime v0.22.0
 	k8s.io/client-go v0.22.0
 	rsc.io/letsencrypt v0.0.3 // indirect
-	sigs.k8s.io/controller-runtime v0.9.5
+	sigs.k8s.io/controller-runtime v0.9.6
 )
