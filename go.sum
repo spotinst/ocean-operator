@@ -870,8 +870,8 @@ github.com/spf13/pflag v1.0.5/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An
 github.com/spf13/viper v1.4.0/go.mod h1:PTJ7Z/lr49W6bUbkmS1V3by4uWynFiR9p7+dSq/yZzE=
 github.com/spf13/viper v1.7.0/go.mod h1:8WkrPz2fc9jxqZNCJI/76HCieCp4Q8HaLFoCha5qpdg=
 github.com/spf13/viper v1.8.1/go.mod h1:o0Pch8wJ9BVSWGQMbra6iw0oQ5oktSIBaujf1rJH9Ns=
-github.com/spotinst/spotinst-sdk-go v1.103.0 h1:Oyz4iqxOkRaVaVrtvkbtUxKNuXKTv7q55G1F2VOsDQM=
-github.com/spotinst/spotinst-sdk-go v1.103.0/go.mod h1:yaIEiSvAzil0DXpwb4rJ02o5gvDU/06u5Hxv3CJHX+M=
+github.com/spotinst/spotinst-sdk-go v1.104.0 h1:uVAn1GG+hXerwf3o/QZqk+UeC7mpeWrS6C3yl6eCkxo=
+github.com/spotinst/spotinst-sdk-go v1.104.0/go.mod h1:yaIEiSvAzil0DXpwb4rJ02o5gvDU/06u5Hxv3CJHX+M=
 github.com/stefanberger/go-pkcs11uri v0.0.0-20201008174630-78d3cae3a980/go.mod h1:AO3tvPzVZ/ayst6UlUKUv6rcPQInYe3IknH3jYhAKu8=
 github.com/stoewer/go-strcase v1.2.0/go.mod h1:IBiWB2sKIp3wVVQ3Y035++gc+knqhUQag1KpM8ahLw8=
 github.com/stretchr/objx v0.0.0-20180129172003-8a3f7159479f/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
