@@ -3,7 +3,7 @@ module github.com/spotinst/ocean-operator
 go 1.16
 
 require (
-	github.com/go-logr/logr v1.2.0
+	github.com/go-logr/logr v1.2.1
 	github.com/google/go-cmp v0.5.6
 	github.com/hashicorp/go-version v1.3.0
 	github.com/mitchellh/mapstructure v1.4.2
