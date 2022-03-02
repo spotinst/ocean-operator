@@ -10,7 +10,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
-	github.com/spotinst/spotinst-sdk-go v1.105.0
+	github.com/spotinst/spotinst-sdk-go v1.112.0
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.19.1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
